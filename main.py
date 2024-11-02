@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 openai.api_key = os.getenv("OPEN_AI_KEY")  # Obtiene la API Key desde las variables de entorno en Railway
 
-@app.route('https://mi-traductor-flask.up.railway.app/traducir', methods=['POST'])
+@app.route('/traducir', methods=['POST'])
 def traducir():
     try:
         # Obtiene el texto y el idioma objetivo desde el JSON enviado
