@@ -37,13 +37,14 @@
         // Función para traducir el texto con la API
         function traducirTexto(texto, idiomaObjetivo) {
             console.log("Enviando texto para traducción:", texto);  // Mensaje de depuración
-            fetch('https://TradBidirec.up.railway.app/traducir', {  // Cambia esta URL a la de tu proyecto en Railway
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ texto: texto, idiomaObjetivo: idiomaObjetivo })
-            })
+				fetch('https://mi-traductor-flask.up.railway.app/traducir', {
+					method: 'POST',
+					headers:{
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ texto: "Hola", idiomaObjetivo: "en" })
+				})
+
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error en la respuesta del servidor: " + response.statusText);
