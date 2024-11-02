@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traductor en Tiempo Real Bidireccional</title>
+</head>
+<body>
+    <h2>Traductor en Tiempo Real Bidireccional</h2>
+    <!-- Botones para cada idioma -->
+    <button onclick="iniciarReconocimiento('español')">Habla en Español</button>
+    <button onclick="iniciarReconocimiento('ingles')">Habla en Inglés</button>
+    <!-- Mostrar los textos originales y traducidos -->
+    <p>Texto en Español: <span id="texto-espanol"></span></p>
+    <p>Texto en Inglés: <span id="texto-ingles"></span></p>
+    <p>Traducción: <span id="traduccion"></span></p>
+
+    <script>
+        // Reconocimiento de voz con selección de idioma
+        function iniciarReconocimiento(idioma) {
+            const reconocimiento = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            reconocimiento.lang = idioma === 'español' ? 'es-ES' : 'en-US';
+
+            reconocimiento.onresult = (event) => {
+                const texto = event.results[0][0].transcript;
+                if (idioma === 'español') {
+                    document.getElementById("texto-espanol").innerText = texto;
+                    traducirTexto(texto, 'en');  // Traducir al inglés
+                } else {
+                    document.getElementById("texto-ingles").innerText = texto;
+                    traducirTexto(texto, 'es');  // Traducir al español
+                }
+            };
+            reconocimiento.start();
+        }
+
+        // Función para traducir el texto con la API
+        function traducirTexto(texto, idiomaObjetivo) {
+            console.log("Enviando texto para traducción:", texto);  // Mensaje de depuración
+            fetch('https://TradBidirec.up.railway.app/traducir', {  // Cambia esta URL a la de tu proyecto en Railway
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ texto: texto, idiomaObjetivo: idiomaObjetivo })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error en la respuesta del servidor: " + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Respuesta recibida:", data);  // Mensaje de depuración
+                document.getElementById("traduccion").innerText = data.traduccion;
+                leerTexto(data.traduccion, idiomaObjetivo);
+            })
+            .catch(error => console.error('Error en la solicitud:', error));
+        }
+
+        // Función para síntesis de voz en el idioma objetivo
+        function leerTexto(texto, idioma) {
+            const speech = new SpeechSynthesisUtterance(texto);
+            speech.lang = idioma === 'en' ? 'en-US' : 'es-ES';  // Idioma de voz
+            window.speechSynthesis.speak(speech);
+        }
+    </script>
+</body>
+</html>
