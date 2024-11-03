@@ -13,17 +13,19 @@ def traducir():
         texto = data.get("texto", "")
         idioma_objetivo = data.get("idiomaObjetivo", "en")
 
-        # Crea el mensaje para OpenAI en formato de chat
+        # Crea el prompt para OpenAI
         prompt = f"Traduce este texto al {'inglés' if idioma_objetivo == 'en' else 'español'}: '{texto}'"
 
-        # Realiza la solicitud a la API de OpenAI con ChatCompletion
-        respuesta = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
+        # Realiza la solicitud a la API de OpenAI usando Completion
+        respuesta = openai.Completion.create(
+            engine="text-davinci-003",
+            prompt=prompt,
+            max_tokens=60,
+            temperature=0.3
         )
 
         # Obtiene y envía la traducción
-        traduccion = respuesta['choices'][0]['message']['content'].strip()
+        traduccion = respuesta.choices[0].text.strip()
         return jsonify({"traduccion": traduccion})
 
     except Exception as e:
@@ -32,4 +34,5 @@ def traducir():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)  # Railway usará el puerto 8080
+
 
