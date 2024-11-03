@@ -18,10 +18,8 @@ def traducir():
 
         # Realiza la solicitud a la API de OpenAI usando Completion
         respuesta = openai.Completion.create(
-            engine="text-davinci-003",
-            prompt=prompt,
-            max_tokens=60,
-            temperature=0.3
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
 
         # Obtiene y envía la traducción
