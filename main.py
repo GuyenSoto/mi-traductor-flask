@@ -13,17 +13,17 @@ def traducir():
         texto = data.get("texto", "")
         idioma_objetivo = data.get("idiomaObjetivo", "en")
 
-        # Crea el prompt para OpenAI
+        # Crea el mensaje para OpenAI en formato de chat
         prompt = f"Traduce este texto al {'inglés' if idioma_objetivo == 'en' else 'español'}: '{texto}'"
 
-        # Realiza la solicitud a la API de OpenAI usando Completion
-        respuesta = openai.Completion.create(
+        # Realiza la solicitud a la API de OpenAI con ChatCompletion
+        respuesta = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}]
         )
 
         # Obtiene y envía la traducción
-        traduccion = respuesta.choices[0].text.strip()
+        traduccion = respuesta['choices'][0]['message']['content'].strip()
         return jsonify({"traduccion": traduccion})
 
     except Exception as e:
