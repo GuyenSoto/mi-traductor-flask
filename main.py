@@ -16,9 +16,9 @@ def traducir():
         # Crea el prompt para OpenAI
         prompt = f"Traduce este texto al {'inglés' if idioma_objetivo == 'en' else 'español'}: '{texto}'"
 
-        # Realiza la solicitud a la API de OpenAI usando Completion con el modelo curie
+        # Realiza la solicitud a la API de OpenAI usando Completion con el modelo text-davinci-002
         respuesta = openai.Completion.create(
-            engine="curie",
+            engine="text-davinci-002",
             prompt=prompt,
             max_tokens=60,
             temperature=0.3
@@ -34,6 +34,7 @@ def traducir():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)  # Railway usará el puerto 8080
+
 
 
 
