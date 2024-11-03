@@ -29,8 +29,10 @@ def traducir():
         return jsonify({"traduccion": traduccion})
 
     except Exception as e:
-        print("Error:", e)
-        return jsonify({"error": "Ocurrió un error en el servidor"}), 500
+        # Captura cualquier excepción y la imprime en los logs de Railway
+        print("Error:", e)  # Esto aparecerá en los logs de Railway
+        return jsonify({"error": "Ocurrió un error en el servidor"}), 500  # Devuelve un mensaje de error
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)  # Railway usará el puerto 8080
+
